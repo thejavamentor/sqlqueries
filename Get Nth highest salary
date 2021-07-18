@@ -1,0 +1,84 @@
+ --
+ -- Create table
+ --
+ CREATE TABLE emp(empno VARCHAR(30) PRIMARY KEY NOT NULL, salary int);
+--TABLE created.
+
+ --
+ -- Insert data the long and tedious way
+ --
+ INSERT INTO emp VALUES('01',20000);
+
+ INSERT INTO emp VALUES('02',20000);
+
+ INSERT INTO emp VALUES('03',10000);
+
+ INSERT INTO emp VALUES('04',1239);
+
+ INSERT INTO emp VALUES('05',1211);
+
+ INSERT INTO emp VALUES('06',18900);
+
+ INSERT INTO emp VALUES('07',26000);
+
+ INSERT INTO emp VALUES('08',12991);
+
+ INSERT INTO emp VALUES('09',9812);
+
+ INSERT INTO emp VALUES('10',6701);
+
+ INSERT INTO emp VALUES('11',9012);
+
+ INSERT INTO emp VALUES ('12',8800);
+
+ INSERT INTO emp VALUES('13',19000);
+
+ -- THis is not working
+ SELECT empno, salary
+ FROM  (SELECT empno, salary FROM emp order by salary) res
+ WHERE rownum <=5;
+
+ -- THis is not working, see error
+ -- The ORDER BY clause is invalid in views, inline functions, derived tables, subqueries, and common table expressions, unless TOP, OFFSET or FOR XML is also specified.
+ SELECT empno, salary  FROM emp
+ WHERE salary = 
+ (SELECT salary FROM  (SELECT salary, rownum rn FROM
+			(SELECT DISTINCT salary FROM emp ORDER BY salary DESC)
+ )
+ WHERE rn = 5)
+
+ select * from emp e1 where 1  = 
+ (select count (distinct e2.salary) from emp e2 where e2.salary > e1.salary
+ )
+
+
+ --update emp set salary =  5000 where empno = 02;
+ --delete from Emp where empno > 6
+ 
+ -- 1. This is one of the elegant way of getting 5th highest salary,  correlated sub query
+ select e1.* from emp e1 where 5 - 3  = 
+ (select count (distinct e2.salary) cnt from emp e2 where e2.salary < e1.salary
+ ) 
+ 
+ --order by salary;
+ SELECT empno, salary  FROM emp order by salary;
+
+ -- 2. by using row_number() function is sql server.
+ SELECT empno, salary FROM emp
+ WHERE salary = (SELECT salary FROM 
+ (SELECT salary, Row_number() over (Order by salary desc) as rn FROM emp ) res
+ WHERE rn = 5)
+
+ -- 3.by using dense_rank function 
+  SELECT empno, salary  FROM
+ (SELECT empno, salary, dense_rank() OVER (ORDER BY salary DESC) rk  FROM emp) res
+ WHERE rk = 5
+
+ SELECT empno, salary  FROM emp order by salary
+ --5. Solution using top query
+ SELECT TOP 1 salary FROM ( SELECT DISTINCT TOP 5 salary FROM Emp ORDER BY salary DESC ) AS temp 
+ ORDER BY salary
+-- Read more: https://javarevisited.blogspot.com/2016/01/4-ways-to-find-nth-highest-salary-in.html#ixzz70y1alaMb
+
+-- Difference between rank denserank and rownumber 
+https://www.c-sharpcorner.com/article/rank-denserank-and-rownumber-functions-in-sql-server/
