@@ -68,6 +68,12 @@
  WHERE salary = (SELECT salary FROM 
  (SELECT salary, Row_number() over (Order by salary desc) as rn FROM emp ) res
  WHERE rn = 5)
+ -- This is another way
+ with CTE1 as(
+select distinct salary,ROW_NUMBER() over (order by salary desc) as RowNumber
+from Employees order by salary desc
+)
+select salary from CTE1 where RowNumber = N
 
  -- 3.by using dense_rank function 
   SELECT empno, salary  FROM
@@ -75,10 +81,15 @@
  WHERE rk = 5
 
  SELECT empno, salary  FROM emp order by salary
- --5. Solution using top query
+ --4. Solution using top query
  SELECT TOP 1 salary FROM ( SELECT DISTINCT TOP 5 salary FROM Emp ORDER BY salary DESC ) AS temp 
  ORDER BY salary
 -- Read more: https://javarevisited.blogspot.com/2016/01/4-ways-to-find-nth-highest-salary-in.html#ixzz70y1alaMb
+
+--5.Method
+select max(salary) from (
+SELECT distinct salary FROM employees ORDER BY salary desc OFFSET 3 rows) res ; 
+
 
 -- Difference between rank denserank and rownumber 
 https://www.c-sharpcorner.com/article/rank-denserank-and-rownumber-functions-in-sql-server/
