@@ -86,7 +86,7 @@ select salary from CTE1 where RowNumber = N
  ORDER BY salary
 -- Read more: https://javarevisited.blogspot.com/2016/01/4-ways-to-find-nth-highest-salary-in.html#ixzz70y1alaMb
 
---5.Method
+--5.Method using offset method.
 select max(salary) from (
 SELECT distinct salary FROM employees ORDER BY salary desc OFFSET 3 rows) res ; 
 
