@@ -1,0 +1,27 @@
+Please refer for Scalary subqueries.
+
+What is Scalar Sub-query ?
+Scalar Sub-query is nothing but the query which only select one column or one expression and it will return only one row. There are two scenarios while working with the scalar subqueries :
+
+1.If the Scalar sub-query returns zero rows then oracle will use the Null value as output of subquery.
+
+2.If Scalar sub-query returns more than one row the oracle will throw the error.
+
+Error Description for the same is :
+Error: Scalar sub-query produced more than one element.
+
+There are following Usages of Scalar Subqueries. I will explain the different examples with these usages in next section.
+
+1.The scalar sub-queries are most used for removing the outer joins.
+
+2.If user want to aggregate multiple tables then scalar sub-queries are useful.
+
+3.Table insertion based on other table values.
+
+
+Please read out for more details.
+https://www.complexsql.com/scalar-subqueries-scalar-subqueries-examples/
+
+
+Scalar funcation.
+https://www.sqlservertutorial.net/sql-server-user-defined-functions/sql-server-scalar-functions/
