@@ -1,0 +1,79 @@
+DROP TABLE IF EXISTS contacts;  
+CREATE TABLE contacts (  
+id INT IDENTITY(1,1) PRIMARY KEY,
+first_name VARCHAR(30) NOT NULL,  
+last_name VARCHAR(25) NOT NULL,   
+    email VARCHAR(210) NOT NULL,  
+    age VARCHAR(22) NOT NULL  
+);  
+
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES ('Kavin','Peterson','kavin.peterson@verizon.net','21') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Nick','Jonas','nick.jonas@me.com','18') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Peter','Heaven','peter.heaven@google.com','23') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES ('Michal','Jackson','michal.jackson@aol.com','22') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Sean','Bean','sean.bean@yahoo.com','23') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Tom ','Baker','tom.baker@aol.com','20') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Ben','Barnes','ben.barnes@comcast.net','17') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Mischa ','Barton','mischa.barton@att.net','18') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Sean','Bean','sean.bean@yahoo.com','16') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Eliza','Bennett','eliza.bennett@yahoo.com','25') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Michal','Krane','michal.Krane@me.com','25') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Peter','Heaven','peter.heaven@google.com','20') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Brian','Blessed','brian.blessed@yahoo.com','20') 
+INSERT INTO contacts (first_name,last_name,email,age)   
+VALUES       ('Kavin','Peterson','kavin.peterson@verizon.net','21')
+
+
+select * from contacts order by First_name;
+
+-- This is to get duplicate columns
+select first_name, count(*) from contacts group by first_name, last_name
+having count(*) > 1
+
+
+--1. Method 1 to delete duplicate rows from table.
+select c1.* from contacts c1 
+inner join Contacts c2
+on  c1.First_name = c2.First_Name and c1.Last_name = c2.Last_Name
+and c1.Id < c2.id
+
+-- 2. delete by user CTE 
+with cte as (
+select Id, First_Name, last_name, ROW_NUMBER() over (Partition by First_name, Last_name order by First_name, Last_name asc) rowno, age from contacts 
+)
+select * from cte;
+
+-- 3. By using third table
+--CREATE TAble Contacts2 LIKE Contacts  -- this is not working ;
+select distinct(First_Name,Last_Name) INTO Contacts2 from Contacts;
+drop table contacts2
+select c1.* INTO  Contacts2 from contacts c1 
+inner join Contacts c2
+on  c1.First_name = c2.First_Name and c1.Last_name = c2.Last_Name
+and c1.Id < c2.id
+
+select * from Contacts
+
+select * into contacts2 from contacts where Id in (
+select max(id) Id   from Contacts group by First_Name, Last_Name)
+-- Drop table and rename newly created table as 
+Drop table Contacts;
+
+-- Create new table again with Original name
+select * into Contacts from contacts2 ;
+Drop table Contacts2;
+
+
