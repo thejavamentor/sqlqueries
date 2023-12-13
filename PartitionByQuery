@@ -18,3 +18,20 @@ Orders table:
 | 9        | 2020-08-07 | 2           | 3          |
 | 10       | 2020-07-15 | 1           | 2          |
 +----------+------------+-------------+------------+
+
+
+Final query to get the result.
+This is to solve leetcode problem.
+Problem: 1596 - The Most Frequently Ordered Products for Each Customer
+https://leetcode.com/problems/the-most-frequently-ordered-products-for-each-customer/description/
+
+
+   select customer_id, product_id, product_name from (
+    SELECT O.customer_id, O.product_id, P.product_name, 
+    RANK() OVER (PARTITION BY customer_id ORDER BY COUNT(O.product_id) DESC) AS rnk
+    FROM Orders O
+    JOIN Products P
+    ON O.product_id = P.product_id  
+    GROUP BY customer_id, product_id
+   ) result where rnk = 1;
+
